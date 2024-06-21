@@ -37,3 +37,4 @@
 2026-01-05T11:27:57  chore: feed the FOUNDRY
 2026-05-09T18:44:04  chore: IRONCLAD hardening pass
 2024-06-17T14:50:10  chore: in case of fire — commit, push, leave building
+2024-06-21T09:07:17  style(output): respect .gitignore when walking
