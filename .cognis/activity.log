@@ -40,3 +40,4 @@
 2024-06-21T09:07:17  style(output): respect .gitignore when walking
 2024-07-14T16:24:24  ci(ci): tune severity weights
 2024-08-06T11:41:31  docs(cli): add a fast path for the common case
+2024-08-29T18:58:38  refactor(engine): respect .gitignore when walking
