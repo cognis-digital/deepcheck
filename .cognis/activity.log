@@ -47,3 +47,4 @@
 2024-11-12T10:06:06  docs(parser): tune severity weights
 2024-11-16T17:23:13  style(scan): add a fast path for the common case
 2024-12-10T12:40:20  ci(scoring): respect .gitignore when walking
+2025-01-02T19:57:27  feat(core): tune severity weights
