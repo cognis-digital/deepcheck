@@ -50,3 +50,4 @@
 2025-01-02T19:57:27  feat(core): tune severity weights
 2025-01-24T14:14:34  refactor(deps): add a fast path for the common case
 2025-01-30T09:31:41  test(scan): respect .gitignore when walking
+2025-02-22T16:48:48  style(scoring): tune severity weights
