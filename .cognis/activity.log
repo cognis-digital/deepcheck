@@ -54,3 +54,4 @@
 2025-03-17T11:05:55  fix(output): add a fast path for the common case
 2025-03-22T18:22:02  docs(ci): respect .gitignore when walking
 2025-04-14T13:39:09  refactor(mcp): tune severity weights
+2025-05-07T08:56:16  build(engine): add a fast path for the common case
