@@ -55,3 +55,4 @@
 2025-03-22T18:22:02  docs(ci): respect .gitignore when walking
 2025-04-14T13:39:09  refactor(mcp): tune severity weights
 2025-05-07T08:56:16  build(engine): add a fast path for the common case
+2025-05-30T15:13:23  feat(output): respect .gitignore when walking
