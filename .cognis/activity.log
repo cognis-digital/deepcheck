@@ -60,3 +60,4 @@
 2025-06-27T17:47:37  test(cli): add a fast path for the common case
 2025-07-20T12:04:44  style(engine): respect .gitignore when walking
 2025-08-12T19:21:51  ci(output): tune severity weights
+2025-08-17T14:38:58  docs(scoring): add a fast path for the common case
