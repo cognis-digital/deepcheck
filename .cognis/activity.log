@@ -68,3 +68,4 @@
 2025-11-22T13:03:33  test(config): pin the test dependencies
 2025-12-16T08:20:40  style(deps): add a fast path for the common case
 2026-01-08T15:37:47  ci(scan): respect .gitignore when walking
+2026-01-12T10:54:54  docs(engine): pin the test dependencies
