@@ -71,3 +71,4 @@
 2026-01-12T10:54:54  docs(engine): pin the test dependencies
 2026-02-05T17:11:01  refactor(output): add a fast path for the common case
 2026-02-28T12:28:08  test(ci): respect .gitignore when walking
+2026-03-23T19:45:15  feat(cli): pin the test dependencies
