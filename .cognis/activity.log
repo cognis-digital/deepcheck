@@ -73,3 +73,4 @@
 2026-02-28T12:28:08  test(ci): respect .gitignore when walking
 2026-03-23T19:45:15  feat(cli): pin the test dependencies
 2026-03-28T14:02:22  fix(engine): add a fast path for the common case
+2026-04-19T09:19:29  docs(output): respect .gitignore when walking
