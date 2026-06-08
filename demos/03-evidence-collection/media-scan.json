@@ -1,0 +1,20 @@
+[
+  {
+    "file": "surveillance-cam-1.mp4",
+    "c2pa_present": false,
+    "synthetic_score": "0.12",
+    "camera": "axis-q1645"
+  },
+  {
+    "file": "phone-clip-victim.mp4",
+    "c2pa_present": false,
+    "synthetic_score": "0.18",
+    "exif": "iphone-15"
+  },
+  {
+    "file": "anon-tip.mp4",
+    "c2pa_present": false,
+    "synthetic_score": "0.78",
+    "exif": "none"
+  }
+]

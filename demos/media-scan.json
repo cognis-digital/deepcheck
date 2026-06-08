@@ -1,0 +1,12 @@
+[
+  {
+    "file": "video1.mp4",
+    "c2pa_present": false,
+    "synthetic_score": "0.83"
+  },
+  {
+    "file": "video2.mp4",
+    "c2pa_present": true,
+    "synthetic_score": "0.12"
+  }
+]

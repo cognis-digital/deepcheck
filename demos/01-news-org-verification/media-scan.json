@@ -1,0 +1,18 @@
+[
+  {
+    "file": "interview-clip-1.mp4",
+    "c2pa_present": true,
+    "synthetic_score": "0.08",
+    "c2pa_signer": "Reuters"
+  },
+  {
+    "file": "viral-clip-X.mp4",
+    "c2pa_present": false,
+    "synthetic_score": "0.91"
+  },
+  {
+    "file": "submitted-tip-video.mp4",
+    "c2pa_present": false,
+    "synthetic_score": "0.45"
+  }
+]
