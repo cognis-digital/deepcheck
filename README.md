@@ -36,7 +36,10 @@ Lightweight synthetic-media detector with C2PA validation — without standing u
 <a name="features"></a>
 ## Features
 
-- ✅ Scan
+- ✅ Extract C2Pa
+- ✅ Validate C2Pa
+- ✅ Analyze Image
+- ✅ Result To Json
 - ✅ Runs on Linux/macOS/Windows · Docker · devcontainer
 - ✅ Ports in Python, JavaScript, Go, and Rust (`ports/`)
 
