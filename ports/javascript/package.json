@@ -1,0 +1,10 @@
+{
+  "name": "@cognis/deepcheck",
+  "version": "0.2.0",
+  "description": "JavaScript port of deepcheck (Cognis Neural Suite)",
+  "bin": {
+    "deepcheck": "index.js"
+  },
+  "license": "LicenseRef-COCL-1.0",
+  "type": "module"
+}
