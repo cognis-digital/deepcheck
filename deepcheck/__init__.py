@@ -1,27 +1,11 @@
-"""DEEPCHECK - lightweight synthetic-media detector with C2PA validation.
-
-Standard-library-only, zero-install. Inspects images for tampering/synthesis
-signals and validates embedded C2PA provenance manifests.
-"""
-from .core import (
-    analyze_image,
-    extract_c2pa,
-    validate_c2pa,
-    Verdict,
-    AnalysisResult,
-    C2PAResult,
-)
-
-TOOL_NAME = "deepcheck"
-TOOL_VERSION = "1.0.0"
-
-__all__ = [
-    "TOOL_NAME",
-    "TOOL_VERSION",
-    "analyze_image",
-    "extract_c2pa",
-    "validate_c2pa",
-    "Verdict",
-    "AnalysisResult",
-    "C2PAResult",
-]
+"""deepcheck — part of the Cognis Neural Suite."""
+try:  # re-export the tool's public API + identity from core
+    from deepcheck.core import *  # noqa: F401,F403
+except Exception:  # pragma: no cover
+    pass
+try:
+    from deepcheck.core import TOOL_NAME, TOOL_VERSION
+except Exception:  # pragma: no cover
+    TOOL_NAME = "deepcheck"
+    TOOL_VERSION = "0.1.0"
+__version__ = TOOL_VERSION
