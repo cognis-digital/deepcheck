@@ -1,11 +1,27 @@
-"""
-DEEPCHECK — Lightweight synthetic-media detector with C2PA validation
-Part of the Cognis Neural Suite by Cognis Digital.
-https://cognis.digital · MIT License
-"""
-from deepcheck.core import scan, TOOL_NAME, TOOL_VERSION
+"""DEEPCHECK - lightweight synthetic-media detector with C2PA validation.
 
-__version__ = TOOL_VERSION
-__author__ = "Cognis Digital"
-__license__ = "MIT"
-__all__ = ["scan", "TOOL_NAME", "TOOL_VERSION", "__version__"]
+Standard-library-only, zero-install. Inspects images for tampering/synthesis
+signals and validates embedded C2PA provenance manifests.
+"""
+from .core import (
+    analyze_image,
+    extract_c2pa,
+    validate_c2pa,
+    Verdict,
+    AnalysisResult,
+    C2PAResult,
+)
+
+TOOL_NAME = "deepcheck"
+TOOL_VERSION = "1.0.0"
+
+__all__ = [
+    "TOOL_NAME",
+    "TOOL_VERSION",
+    "analyze_image",
+    "extract_c2pa",
+    "validate_c2pa",
+    "Verdict",
+    "AnalysisResult",
+    "C2PAResult",
+]
