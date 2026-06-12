@@ -16,7 +16,7 @@
 </div>
 
 ```bash
-pip install cognis-deepcheck
+pip install "git+https://github.com/cognis-digital/deepcheck.git"
 deepcheck scan .            # → prioritized findings in seconds
 ```
 
@@ -49,7 +49,7 @@ Lightweight synthetic-media detector with C2PA validation — without standing u
 ## Quick start
 
 ```bash
-pip install cognis-deepcheck
+pip install "git+https://github.com/cognis-digital/deepcheck.git"
 deepcheck --version
 deepcheck scan .                       # scan current project
 deepcheck scan . --format json         # machine-readable
