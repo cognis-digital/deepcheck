@@ -20,6 +20,37 @@ pip install cognis-deepcheck
 deepcheck scan .            # → prioritized findings in seconds
 ```
 
+## Usage — step by step
+
+1. Install the CLI (Python 3.9+):
+
+   ```bash
+   pip install deepcheck      # or: pip install .   from a checkout
+   ```
+
+2. Inspect an image — the `inspect` subcommand runs synthetic-media + C2PA analysis on a JPEG/PNG:
+
+   ```bash
+   deepcheck inspect photo.jpg
+   ```
+
+   The default `table` view prints the verdict, a `synthetic_score` (0=authentic .. 1=synthetic), C2PA provenance, and weighted signals.
+
+3. Emit machine-readable output for tooling:
+
+   ```bash
+   deepcheck inspect photo.jpg --format json > report.json
+   ```
+
+4. Read the result via the exit code: `0` = analysis ran and verdict is likely-authentic, `1` = a finding (suspicious / likely-synthetic), `2` = usage/IO error. Parse the JSON for the `verdict` and `synthetic_score` fields, e.g. `jq .verdict report.json`.
+
+5. Gate a media-intake pipeline in CI — fail the job when an asset is flagged:
+
+   ```bash
+   deepcheck inspect uploaded.png --format json || echo "deepcheck flagged uploaded.png"
+   ```
+
+
 ## Contents
 
 - [Why deepcheck?](#why) · [Features](#features) · [Quick start](#quick-start) · [Example](#example) · [Architecture](#architecture) · [AI stack](#ai-stack) · [How it compares](#how-it-compares) · [Integrations](#integrations) · [Install anywhere](#install-anywhere) · [Related](#related) · [Contributing](#contributing)
