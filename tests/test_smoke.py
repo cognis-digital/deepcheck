@@ -85,8 +85,9 @@ class TestHeuristics(unittest.TestCase):
             os.remove(path)
 
     def test_clean_photo_authentic(self):
-        # camera EXIF hint + varied quant table => low score
-        path = _write(_jpeg(software=b"Apple iPhone 15", camera=True))
+        # camera EXIF hint + varied low-mean quant table => low score
+        # use range(2, 66): 64 distinct values, mean ~33.5 (well below the >40 coarse threshold)
+        path = _write(_jpeg(software=b"Apple iPhone 15", camera=True, quant=list(range(2, 66))))
         try:
             r = analyze_image(path)
             self.assertLess(r.synthetic_score, 0.25)
@@ -157,7 +158,8 @@ class TestCLI(unittest.TestCase):
             os.remove(path)
 
     def test_exit_authentic(self):
-        path = _write(_jpeg(software=b"Apple iPhone 15", camera=True))
+        # use same low-mean quant table as test_clean_photo_authentic
+        path = _write(_jpeg(software=b"Apple iPhone 15", camera=True, quant=list(range(2, 66))))
         try:
             self.assertEqual(main(["inspect", path]), 0)
         finally:
