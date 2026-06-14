@@ -36,3 +36,6 @@ deepcheck = "deepcheck.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["deepcheck"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
