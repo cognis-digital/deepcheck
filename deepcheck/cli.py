@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import struct
 import sys
 
 from . import TOOL_NAME, TOOL_VERSION
@@ -89,8 +90,11 @@ def main(argv=None) -> int:
 
     try:
         result = analyze_image(args.image)
-    except (OSError, struct_error_t()) as exc:  # type: ignore[misc]
+    except (OSError, struct.error, ValueError) as exc:
         print(f"{TOOL_NAME}: error: {exc}", file=sys.stderr)
+        return 2
+    except Exception as exc:  # noqa: BLE001
+        print(f"{TOOL_NAME}: unexpected error: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 2
 
     if args.format == "json":
@@ -99,11 +103,6 @@ def main(argv=None) -> int:
         print(_render_table(result))
 
     return 1 if _is_finding(result) else 0
-
-
-def struct_error_t():
-    import struct
-    return struct.error
 
 
 if __name__ == "__main__":

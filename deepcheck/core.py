@@ -283,19 +283,19 @@ def validate_c2pa(blob: bytes) -> C2PAResult:
     types = [b["type"] for b in boxes]
 
     # A valid C2PA store carries a manifest superbox and a claim.
-    has_store = any(l and l.startswith("c2pa") for l in labels) or b"c2pa" in blob[:64].lower()
-    has_claim = any(l and "claim" in l for l in labels)
-    has_assertions = any(l and "assertions" in l for l in labels)
+    has_store = any(lbl and lbl.startswith("c2pa") for lbl in labels) or b"c2pa" in blob[:64].lower()
+    has_claim = any(lbl and "claim" in lbl for lbl in labels)
+    has_assertions = any(lbl and "assertions" in lbl for lbl in labels)
 
     # Assertions are labelled child boxes under the assertion store.
     res.assertions = sorted(
-        {l for l in labels if l and ("." in l or l.startswith("c2pa.") or l.startswith("cai."))}
+        {lbl for lbl in labels if lbl and ("." in lbl or lbl.startswith("c2pa.") or lbl.startswith("cai."))}
     )
 
     # Hard binding: a data-hash / box-hash assertion must exist for the manifest
     # to actually bind to the asset bytes.
     res.has_hard_binding = any(
-        l and ("hash.data" in l or "hash.boxes" in l or l.endswith(".hash")) for l in labels
+        lbl and ("hash.data" in lbl or "hash.boxes" in lbl or lbl.endswith(".hash")) for lbl in labels
     )
 
     # Claim generator string, if present in a CBOR-ish text blob.
@@ -347,7 +347,7 @@ def _dqt_signals(dqt_tables: list[bytes]) -> list[Signal]:
             else:
                 # 16-bit entries
                 for k in range(count):
-                    if p + 1 < len(tbl):
+                    if p + 2 <= len(tbl):
                         values.append(struct.unpack(">H", tbl[p : p + 2])[0])
                     p += 2
     if not values:
@@ -412,27 +412,45 @@ def _score_to_verdict(score: float, c2pa: C2PAResult) -> Verdict:
 
 
 def analyze_image(path: str) -> AnalysisResult:
+    if not path:
+        raise ValueError("path must be a non-empty string")
     with open(path, "rb") as fh:
         data = fh.read()
+    if not data:
+        return AnalysisResult(
+            path=path,
+            format="unknown",
+            width=None,
+            height=None,
+            verdict=Verdict.UNKNOWN.value,
+            synthetic_score=0.0,
+            signals=[{"name": "empty_file", "weight": 0.0, "detail": "file contains no data"}],
+            metadata={"metadata_bytes": 0, "has_ai_tag": False, "has_camera_hint": False},
+            c2pa=C2PAResult(note="no data to analyse"),
+        )
     fmt = _sniff_format(data)
     width = height = None
     signals: list[Signal] = []
     raw_meta = b""
 
-    if fmt == "jpeg":
-        parsed = _parse_jpeg(data)
-        width, height = parsed["width"], parsed["height"]
-        raw_meta = b"".join(p for _, p in parsed["app_segments"])
-        signals += _dqt_signals(parsed["dqt_tables"])
-        jumbf = parsed["jumbf"]
-    elif fmt == "png":
-        parsed = _parse_png(data)
-        width, height = parsed["width"], parsed["height"]
-        raw_meta = b"".join(parsed["text_chunks"])
-        jumbf = parsed["jumbf"]
-    else:
+    try:
+        if fmt == "jpeg":
+            parsed = _parse_jpeg(data)
+            width, height = parsed["width"], parsed["height"]
+            raw_meta = b"".join(p for _, p in parsed["app_segments"])
+            signals += _dqt_signals(parsed["dqt_tables"])
+            jumbf = parsed["jumbf"]
+        elif fmt == "png":
+            parsed = _parse_png(data)
+            width, height = parsed["width"], parsed["height"]
+            raw_meta = b"".join(parsed["text_chunks"])
+            jumbf = parsed["jumbf"]
+        else:
+            jumbf = b""
+            signals.append(Signal("unknown_format", 0.0, "unrecognized container; limited analysis"))
+    except (struct.error, ValueError) as exc:
+        signals.append(Signal("parse_error", 0.0, f"format parser raised {type(exc).__name__}: {exc}"))
         jumbf = b""
-        signals.append(Signal("unknown_format", 0.0, "unrecognized container; limited analysis"))
 
     meta = {"_raw_metadata": raw_meta}
     signals += _metadata_signals(meta)

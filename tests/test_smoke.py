@@ -2,6 +2,9 @@
 
 These build fixtures in-memory so they don't depend on any committed binary.
 """
+import contextlib
+import io
+import json
 import os
 import struct
 import sys
@@ -170,6 +173,94 @@ class TestCLI(unittest.TestCase):
 
     def test_no_command_usage(self):
         self.assertEqual(main([]), 2)
+
+    def test_directory_as_image(self):
+        # Passing a directory path must return exit code 2, not crash.
+        import tempfile
+        d = tempfile.mkdtemp()
+        try:
+            self.assertEqual(main(["inspect", d]), 2)
+        finally:
+            os.rmdir(d)
+
+    def test_json_output_is_valid_json(self):
+        path = _write(_jpeg(software=b"Apple iPhone 15", camera=True, quant=list(range(2, 66))))
+        try:
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                code = main(["inspect", path, "--format", "json"])
+            self.assertEqual(code, 0)
+            parsed = json.loads(buf.getvalue())
+            self.assertIn("verdict", parsed)
+            self.assertIn("synthetic_score", parsed)
+        finally:
+            os.remove(path)
+
+
+class TestEdgeCases(unittest.TestCase):
+    """Edge-case and robustness tests introduced by hardening."""
+
+    def test_empty_file_no_crash(self):
+        # A zero-byte file must return a clean result, not raise an exception.
+        fd, path = tempfile.mkstemp()
+        os.close(fd)
+        try:
+            from deepcheck.core import analyze_image
+            r = analyze_image(path)
+            self.assertEqual(r.format, "unknown")
+            self.assertEqual(r.verdict, Verdict.UNKNOWN.value)
+            self.assertEqual(r.synthetic_score, 0.0)
+        finally:
+            os.remove(path)
+
+    def test_empty_file_cli_exit_code(self):
+        # CLI must not traceback on an empty file — exit 0 (unknown → not a finding).
+        fd, path = tempfile.mkstemp(suffix=".jpg")
+        os.close(fd)
+        try:
+            self.assertEqual(main(["inspect", path]), 0)
+        finally:
+            os.remove(path)
+
+    def test_truncated_png_no_crash(self):
+        # A PNG with just the header and a malformed IHDR must not raise.
+        png_header = b"\x89PNG\r\n\x1a\n"
+        truncated_ihdr = struct.pack(">I", 13) + b"IHDR" + b"\x00\x00\x00\x10\x00\x00\x00\x10"
+        # Missing the last byte of IHDR + CRC -> truncated
+        data = png_header + truncated_ihdr
+        fd, path = tempfile.mkstemp(suffix=".png")
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(data)
+        try:
+            from deepcheck.core import analyze_image
+            r = analyze_image(path)
+            self.assertEqual(r.format, "png")
+        finally:
+            os.remove(path)
+
+    def test_validate_c2pa_large_corrupt_blob(self):
+        # A large blob of random-ish bytes must not raise, just report errors.
+        big_blob = bytes(range(256)) * 40  # 10 240 bytes, no valid JUMBF
+        res = validate_c2pa(big_blob)
+        self.assertTrue(res.present)
+        self.assertFalse(res.valid)
+
+    def test_dqt_16bit_entries_no_crash(self):
+        # A DQT table with precision=1 (16-bit entries) must parse cleanly.
+        from deepcheck.core import _dqt_signals
+        # Build a valid 16-bit DQT: 1-byte header (pq=1,id=0) + 64×2-byte values
+        header = bytes([0x10])
+        entries = struct.pack(">64H", *([42] * 64))
+        sigs = _dqt_signals([header + entries])
+        # All 64 entries are 42, so distinct=1 (<= 4 triggers flat_quant_table)
+        names = {s.name for s in sigs}
+        self.assertIn("flat_quant_table", names)
+
+    def test_analyze_image_empty_string_path_raises(self):
+        # Passing an empty path must raise ValueError, not an obscure OSError.
+        from deepcheck.core import analyze_image
+        with self.assertRaises((ValueError, OSError)):
+            analyze_image("")
 
 
 if __name__ == "__main__":
