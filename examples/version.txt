@@ -1,0 +1,3 @@
+$ deepcheck-emit --version
+
+deepcheck 0.1.0

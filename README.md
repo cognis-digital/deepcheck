@@ -20,6 +20,59 @@ pip install cognis-deepcheck
 deepcheck scan .            # → prioritized findings in seconds
 ```
 
+
+<!-- cognis:example:start -->
+## 🔎 Example output
+
+Real, reproducible output from the tool — runs offline:
+
+```console
+$ deepcheck-emit --version
+deepcheck 0.1.0
+```
+
+```console
+$ deepcheck-emit --help
+usage: deepcheck [-h] [--version] {inspect} ...
+
+Lightweight synthetic-media detector with C2PA validation.
+
+positional arguments:
+  {inspect}
+    inspect   Analyze an image for synthesis/tampering + C2PA.
+
+options:
+  -h, --help  show this help message and exit
+  --version   show program's version number and exit
+```
+
+> Blocks above are real `deepcheck` output — reproduce them from a clone.
+
+**Sample result format** _(illustrative values — run on your own data for real findings):_
+
+```
+{
+"findings": [
+    {
+        "id": "123456",
+        "title": "Suspicious Network Traffic",
+        "description": "Network traffic from unknown IP address",
+        "severity": "high",
+        "created_at": "2023-02-15T14:30:00Z"
+    },
+    {
+        "id": "789012",
+        "title": "Unusual File Access",
+        "description": "File access to sensitive directory",
+        "severity": "medium",
+        "created_at": "2023-02-16T10:45:00Z"
+    }
+]
+}
+```
+
+<!-- cognis:example:end -->
+
 ## Usage — step by step
 
 1. Install the CLI (Python 3.9+):

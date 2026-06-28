@@ -1,0 +1,13 @@
+$ deepcheck-emit --help
+
+usage: deepcheck [-h] [--version] {inspect} ...
+
+Lightweight synthetic-media detector with C2PA validation.
+
+positional arguments:
+  {inspect}
+    inspect   Analyze an image for synthesis/tampering + C2PA.
+
+options:
+  -h, --help  show this help message and exit
+  --version   show program's version number and exit
